@@ -25,6 +25,72 @@ RTree::~RTree()
 	root = NULL;
 }
 
+/*
+* Helper function to calculate the area enlargement after enclose a new entry in a bounding box
+*/
+int RTree::calc_area_enlargement(BoundingBox& original,BoundingBox& addition)
+{
+	BoundingBox tmp = new BoundingBox(original);
+	tmp.group_with(addition);
+	return tmp.get_area()-original.get_area();
+}
+
+
+RTNode* RTree::choose_leaf(const Entry& newEntry)
+{
+	RTNode* cur = root;
+	while(true)
+	{
+		if(cur.level==0) //when arrive at leaf node
+		{
+			return cur;
+		}
+
+		min = calc_area_enlargement(cur->entries[0].get_mbr(),newEntry.get_mbr());
+		minIdx = 0;
+		for(int i=1;i<cur.entry_num;++i)
+		{
+			int diff_area = calc_area_enlargement(cur->entries[i].get_mbr(),newEntry.get_mbr());
+			if(diff_area<min)
+			{
+				min = diff_area;
+				minIdx = i;
+			}
+			else if(diff_area==min)
+			{
+				//choose smaller area to resolve tie, if still tie, use tie_breaking to resolve
+				if(cur->entries[i].get_mbr().get_area()<cur->entries[minIdx].get_mbr().get_area())
+				{
+					min = diff_area;
+					minIdx = i;
+				}
+				else if(cur->entries[i].get_mbr().get_area()==cur->entries[minIdx].get_mbr().get_area())
+				{
+					if(tie_breaking(cur->entries[i].get_mbr(),cur->entries[minIdx].get_mbr()))
+					{
+						min = diff_area;
+                        minIdx = i;
+					}
+				}
+			}
+		}// find the appropriate entry to include the new entry
+
+		cur = cur->entries[minIdx].get_ptr();
+
+	}
+
+}
+
+void split_node(RTNode* l, RTNode* ll, Entry& newEntry)
+{
+
+}
+
+void adjust_tree(RTree* l,RTree* ll)
+{
+	//remember to grow the tree taller if neccessary
+}
+
 
 bool RTree::insert(const vector<int>& coordinate, int rid)
 {
@@ -36,6 +102,24 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	/***
 	ADD YOUR CODE HERE
 	****/
+	BoundingBox bb = new BoundingBox(coordinate,coordinate);
+	Entry newEntry = new Entry(bb,rid);
+
+	RTNode* l = choose_leaf(newEntry);
+	if(l.entry_num == max_entry_num) // the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
+	{
+		RTNode* ll = new RTNode(l.level,l.size);
+		split_node(l,ll,newEntry);
+		adjust_tree(l,ll);
+	}
+	else //insert the newEntry into the leaf node
+	{
+		l->entries[++l->entry_num] = newEntry;
+		adjust_tree(l,NULL);
+	}
+
+
+
 }
 
 void RTree::query_range(const BoundingBox& mbr, int& result_count, int& node_travelled)
@@ -77,7 +161,7 @@ bool RTree::query_point(const vector<int>& coordinate, Entry& result)
 BoundingBox RTree::get_mbr(Entry* entry_list, int len)
 {
 	BoundingBox mbr(entry_list[0].get_mbr());
-	for (int i = 1; i < len; i++) {        
+	for (int i = 1; i < len; i++) {
 		mbr.group_with(entry_list[i].get_mbr());
 	}
 	return mbr;
@@ -109,7 +193,7 @@ bool RTree::tie_breaking(const BoundingBox& box1, const BoundingBox& box2)
 
 void RTree::stat(RTNode* node, int& record_cnt, int& node_cnt)
 {
-	if (node->level == 0) {
+	if (node->level == 0) {//when level==0, it is leaf node
 		record_cnt += node->entry_num;
 		node_cnt++;
 	}

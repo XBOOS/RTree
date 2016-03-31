@@ -26,6 +26,9 @@ class RTree {
 		void query_range(const BoundingBox& mbr, int& result_count, int& node_travelled);
 		bool query_point(const vector<int>& coordinate, Entry& result);
 
+		//utility methods
+		RTNode* choose_leaf(const Entry& newEntry);
+
 	private:
 		int max_entry_num;
 		int dimension;
