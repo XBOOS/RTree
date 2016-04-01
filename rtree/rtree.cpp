@@ -28,7 +28,7 @@ RTree::~RTree()
 /*
 * Helper function to calculate the area enlargement after enclose a new entry in a bounding box
 */
-int RTree::calc_area_enlargement(BoundingBox& original,BoundingBox& addition)
+int RTree::calc_area_enlargement(const BoundingBox& original,const BoundingBox& addition)
 {
 	BoundingBox tmp = new BoundingBox(original);
 	tmp.group_with(addition);
@@ -37,14 +37,14 @@ int RTree::calc_area_enlargement(BoundingBox& original,BoundingBox& addition)
 
 /* Helper function to swap two entries in RTNode. */
 
-void swap_leaf_node_entry(Entry& entry1, Entry& entry2)
+void RTree::swap_leaf_node_entry(Entry& entry1, Entry& entry2)
 {
 				//swap needs deep copy
     			Entry tmp = new Entry(entry1.get_mbr(),entry1.get_rid());
     			tmp.set_ptr(entry1.get_ptr())
     			entry1.set_rid(entry2.get_rid());
     			entry1.set_mbr(entry2.get_mbr());
-    			entry1.set_ptr(entry2.get_ptr())
+    			entry1.set_ptr(entry2.get_ptr());
     			entry2.set_rid(tmp.get_rid());
     			entry2.set_mbr(tmp.get_mbr());
     			entry2.set_ptr(tmp.get_ptr());
@@ -59,34 +59,34 @@ RTNode* RTree::choose_leaf(const Entry& newEntry)
 	RTNode* cur = root;
 	while(true)
 	{
-		if(cur.level==0) //when arrive at leaf node
+		if(cur->level==0) //when arrive at leaf node
 		{
 			return cur;
 		}
 
-		min = calc_area_enlargement(cur->entries[0].get_mbr(),newEntry.get_mbr());
-		minIdx = 0;
-		for(int i=1;i<cur.entry_num;++i)
+		int min_diff = calc_area_enlargement(cur->entries[0].get_mbr(),newEntry.get_mbr());
+		int minIdx = 0;
+		for(int i=1;i<cur->entry_num;++i)
 		{
 			int diff_area = calc_area_enlargement(cur->entries[i].get_mbr(),newEntry.get_mbr());
-			if(diff_area<min)
+			if(diff_area<min_diff)
 			{
-				min = diff_area;
+				min_diff = diff_area;
 				minIdx = i;
 			}
-			else if(diff_area==min)
+			else if(diff_area==min_diff)
 			{
 				//choose smaller area to resolve tie, if still tie, use tie_breaking to resolve
 				if(cur->entries[i].get_mbr().get_area()<cur->entries[minIdx].get_mbr().get_area())
 				{
-					min = diff_area;
+					min_diff = diff_area;
 					minIdx = i;
 				}
 				else if(cur->entries[i].get_mbr().get_area()==cur->entries[minIdx].get_mbr().get_area())
 				{
 					if(tie_breaking(cur->entries[i].get_mbr(),cur->entries[minIdx].get_mbr()))
 					{
-						min = diff_area;
+						min_diff = diff_area;
                         minIdx = i;
 					}
 				}
@@ -102,7 +102,7 @@ RTNode* RTree::choose_leaf(const Entry& newEntry)
 * function to set the two index number of the entries list which form the extreme pair
 * according to linear-cost algorithm.
 */
-void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
+void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 {
 	vector<int> lowMax_idxs;
 	vector<int> highMin_idxs;
@@ -110,14 +110,15 @@ void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	lowMax_idxs.reserve(max_entry_num+1);
 	highMin_idxs.reserve(max_entry_num+1);
 	norm_width_diff.reserve(max_entry_num+1);
-
+	int lowMax_idx;
+	int highMax_idx;
 
 	for(int i=0;i<newEntry.get_mbr().get_dim();++i)
 	{
 		int lowMax = newEntry.get_mbr().get_lowestValue_at(i);
-		int highMin = newEntry.get_highestValue_at.get_lowestValue_at(i);
-		int lowMax_idx = max_entry_num;//virtual index for newEntry
-		int highMin_idx = max_entry_num;//for newEntry
+		int highMin = newEntry.get_mbr().get_highestValue_at(i);
+		lowMax_idx = max_entry_num;//virtual index for newEntry
+		highMin_idx = max_entry_num;//for newEntry
 		int lower_bound = lowMax;
 		int higher_bound = highMin;
 		for(int j=0;j<max_entry_num;++i)
@@ -154,7 +155,7 @@ void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	{
 		if(norm_width_diff[i]>extreme_pair_value)
 		{
-			extreme_pair_value = norm_width_diff;
+			extreme_pair_value = norm_width_diff[i];
 			extreme_pair_idx = i;
 		}
 	}
@@ -207,13 +208,13 @@ void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 
 	}
 
-	for(int i=0;i<max_entry_num;++1)
+	for(int i=0;i<max_entry_num;++i)
     {
     	for(int j=i+1;j<max_entry_num;++j)
    		{
    			if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
     		{
-    			swap_leaf_node_entry(l->entries[i].get_mbr(),l->entries[j].get_mbr());
+    			swap_leaf_node_entry(l->entries[i],l->entries[j]);
    			}
     	}
    	}
@@ -228,7 +229,7 @@ void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 * function to split the node when the entries number is exceeding the max_entry_num
 */
 
-void split_node(RTNode* l, RTNode* ll, Entry& newEntry)
+void RTree::split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 {
 
 	int idx1 = idx2 = 0;
@@ -312,7 +313,7 @@ void split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 	ll.entry_num = ll_next_idx;
 }
 
-void adjust_tree(RTree* l,RTree* ll)
+void RTree::adjust_tree(RTree* l,RTree* ll)
 {
 	//remember to grow the tree taller if neccessary
 	RTree* N = l;

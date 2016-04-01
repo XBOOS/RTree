@@ -27,7 +27,14 @@ class RTree {
 		bool query_point(const vector<int>& coordinate, Entry& result);
 
 		//utility methods
+		int calc_area_enlargement(BoundingBox& original,BoundingBox& addition);
+		void swap_leaf_node_entry(Entry& entry1, Entry& entry2);
 		RTNode* choose_leaf(const Entry& newEntry);
+
+		void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2);
+		void split_node(RTNode* l, RTNode* ll, Entry& newEntry);
+		void adjust_tree(RTree* l,RTree* ll);
+
 
 	private:
 		int max_entry_num;
