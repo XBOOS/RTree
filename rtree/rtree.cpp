@@ -35,7 +35,25 @@ int RTree::calc_area_enlargement(BoundingBox& original,BoundingBox& addition)
 	return tmp.get_area()-original.get_area();
 }
 
+/* Helper function to swap two entries in RTNode. */
 
+void swap_leaf_node_entry(Entry& entry1, Entry& entry2)
+{
+				//swap needs deep copy
+    			Entry tmp = new Entry(entry1.get_mbr(),entry1.get_rid());
+    			tmp.set_ptr(entry1.get_ptr())
+    			entry1.set_rid(entry2.get_rid());
+    			entry1.set_mbr(entry2.get_mbr());
+    			entry1.set_ptr(entry2.get_ptr())
+    			entry2.set_rid(tmp.get_rid());
+    			entry2.set_mbr(tmp.get_mbr());
+    			entry2.set_ptr(tmp.get_ptr());
+
+}
+
+/*
+* function to choose the leaf for new entry insertion
+*/
 RTNode* RTree::choose_leaf(const Entry& newEntry)
 {
 	RTNode* cur = root;
@@ -80,15 +98,229 @@ RTNode* RTree::choose_leaf(const Entry& newEntry)
 	}
 
 }
+/*
+* function to set the two index number of the entries list which form the extreme pair
+* according to linear-cost algorithm.
+*/
+void linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
+{
+	vector<int> lowMax_idxs;
+	vector<int> highMin_idxs;
+	vector<int> norm_width_diff;
+	lowMax_idxs.reserve(max_entry_num+1);
+	highMin_idxs.reserve(max_entry_num+1);
+	norm_width_diff.reserve(max_entry_num+1);
+
+
+	for(int i=0;i<newEntry.get_mbr().get_dim();++i)
+	{
+		int lowMax = newEntry.get_mbr().get_lowestValue_at(i);
+		int highMin = newEntry.get_highestValue_at.get_lowestValue_at(i);
+		int lowMax_idx = max_entry_num;//virtual index for newEntry
+		int highMin_idx = max_entry_num;//for newEntry
+		int lower_bound = lowMax;
+		int higher_bound = highMin;
+		for(int j=0;j<max_entry_num;++i)
+		{
+			int lowTmp = l->entries[j].get_mbr().get_lowestValue_at(i);
+			int highTmp = l->entries[j].get_mbr().get_highestValue_at(i);
+
+			lower_bound = lower_bound<lowTmp?lower_bound:lowTmp;
+            higher_bound = higher_bound>highTmp?higher_bound:highTmp;
+
+			if((lowTmp>lowMax)|| (lowTmp==lowMax && !tie_breaking(l->entries[j].get_mbr(),newEntry.get_mbr())))
+			{
+				lowMax = lowTmp;
+				lowMax_idx = j;
+			}
+
+			if((highTmp<highMin)|| (highTmp==highMin && tie_breaking(l->entries[j].get_mbr(),newEntry.get_mbr())))
+            {
+        		highMin = highTmp;
+            	highMin_idx = j;
+          	}
+
+		}
+		lowMax_idxs[i] = lowMax_idx;
+		highMin_idxs[i] = highMin_idx;
+		norm_width_diff[i] = (highMin-lowMax)/(higher_bound-lower_bound);
+
+	}
+	//after finding the information on each dimention.
+
+	int extreme_pair_idx = 0;
+	int extreme_pair_value = norm_width_diff[0];
+	for(int i=1;i<max_entry_num;++i)
+	{
+		if(norm_width_diff[i]>extreme_pair_value)
+		{
+			extreme_pair_value = norm_width_diff;
+			extreme_pair_idx = i;
+		}
+	}
+
+
+	//if the lowMax and highMin belong to the same entry
+	if(lowMax_idxs[extreme_pair_idx]==highMin_idxs[extreme_pair_idx])
+	{
+		//insert the selected one if
+		//sort the remaining entries except for A. O(n^2) time complexity using tie_breaking.but this is just corner case
+		//so does not affect the amortized analysis
+		if(extreme_pair_idx!=max_entry_num)
+		{
+			//if the special element is not the newEntry, just insert newEntry to the spefic position and sort the entries list
+			//otherwise leave the list its way
+			swap_leaf_node_entry(l->entries[extreme_pair_value],newEntry);
+		}
+
+//		for(int i=0;i<max_entry_num;++1)
+//		{
+//			for(int j=i+1;j<max_entry_num;++j)
+//			{
+//				if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+//				{
+//					swap_leaf_node_entry(l->entries[i].get_mbr(),l->entries[j].get_mbr());
+//				}
+//			}
+//		}
+		//one of them is copied to newEntry, one of them if changed to the first entry of l->entries
+//		idx1 = 0;
+//		idx2 = max_entry_num;
+
+
+	}
+	else //successfully selected out the two seeds
+	{
+		idx1 = lowMax_idx<highMin_idx?lowMax_idx:highMin_idx; //the smaller one of the two indexs
+		idx2 = lowMax_idx>highMin_idx?lowMax_idx:highMin_idx; //the larger one of the two indexs
+
+		//actually just swapping it to the first entry and newEntry. and sort the remaining ones for the pickNext
+
+		swap_leaf_node_entry(l->entries[idx1],l->entries[0]);
+		if(idx2<max_entry_num)
+		{
+			swap_leaf_node_entry(l->entries[idx2],newEntry);
+		}
+
+//		idx1 = 0;
+//      idx2 = max_entry_num;
+
+	}
+
+	for(int i=0;i<max_entry_num;++1)
+    {
+    	for(int j=i+1;j<max_entry_num;++j)
+   		{
+   			if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+    		{
+    			swap_leaf_node_entry(l->entries[i].get_mbr(),l->entries[j].get_mbr());
+   			}
+    	}
+   	}
+
+   	idx1 = 0;
+    idx2 = max_entry_num;
+
+}
+
+
+/*
+* function to split the node when the entries number is exceeding the max_entry_num
+*/
 
 void split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 {
 
+	int idx1 = idx2 = 0;
+	linear_pick_seeds(l,newEntry,idx1,idx2);
+	ll.entries[0] = newEntry;
+
+	int l_next_idx = 1;
+	int ll_next_idx = 1;
+	//assign the remaining entries in the order of sorted list
+
+	BoundingBox l_mbr = new BoundingBox(l->entries[0].get_mbr());
+	BoundingBox ll_mbr = new BoundingBox(newEntry.get_mbr());
+
+	int i;
+	for(i=1;i<max_entry_num;++i)
+	{
+		if(l_next_idx>=max_entry_num/2 || ll_next_idx>=max_entry_num/2)
+		{//one of the node arrive the max number of entries,resulting that the other one has too few entries
+			break;
+		}
+		int l_area_expansion = calc_area_enlargement(l_mbr,l->entries[i].get_mbr());
+		int ll_area_expansion = calc_area_enlargement(ll_mbr,l->entries[i].get_mbr());
+
+		if(l_area_expansion<ll_area_expansion)
+		{
+			l->entries[l_next_idx++] = l->entries[i];
+        	l_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+		else if(l_area_expansion>ll_area_expansion)
+		{
+			ll->entries[ll_next_idx++] = l->entries[i];
+			ll_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+		else if(l_next_idx<ll_next_idx)
+		{
+			l->entries[l_next_idx++] = l->entries[i];
+			l_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+		else if(l_next_idx>ll_next_idx)
+		{
+			ll->entries[ll_next_idx++] = l->entries[i];
+			ll_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+		else if(tie_breaking(l_mbr,ll_mbr))
+		{
+			l->entries[l_next_idx++] = l->entries[i];
+        	l_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+		else
+		{
+			ll->entries[ll_next_idx++] = l->entries[i];
+			ll_mbr.group_with(l->entries[i].get_mbr());
+
+		}
+	}
+	//put the remaining value together into one which has too few entries.
+	if(l_next_idx<ll_next_idx)
+	{
+		for(;i<max_entry_num;++i)
+		{
+			l->entries[l_next_idx++] = l->entries[i];
+            l_mbr.group_with(l->entries[i].get_mbr());
+		}
+	}
+	else
+	{
+		for(;i<max_entry_num;++i)
+        {
+        	ll->entries[ll_next_idx++] = l->entries[i];
+            ll_mbr.group_with(l->entries[i].get_mbr());
+        }
+
+	}
+
+	l.entry_num = l_next_idx;
+	ll.entry_num = ll_next_idx;
 }
 
 void adjust_tree(RTree* l,RTree* ll)
 {
 	//remember to grow the tree taller if neccessary
+	RTree* N = l;
+	RTree* NN = ll;
+	while(true)
+	{
+		if()
+	}
 }
 
 

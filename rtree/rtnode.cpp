@@ -12,6 +12,17 @@ Entry::Entry(const BoundingBox& thatMBR, const int rid):mbr(thatMBR) {
 	this->ptr = NULL;
 }
 
+Entry& Entry::operator=(const Entry& other)
+{
+	if (&other != this) {
+		this.mbr = other.mbr;
+		this.rid = other.rid;
+		this.ptr = other.ptr;
+
+	}
+	return *this;
+}
+
 Entry::~Entry() {
 	this->ptr = NULL;
 }
@@ -29,6 +40,11 @@ int Entry::get_rid() const {
 	return this->rid;
 }
 
+void Entry::set_rid(int rid){
+	this->rid = rid;
+}
+
+
 
 void Entry::set_mbr(const BoundingBox& thatMBR) {
 	this->mbr.set_boundingbox(thatMBR);//ATTENTION: should be deep copy...
@@ -44,6 +60,8 @@ void Entry::print() {
 	cout << this->rid << endl;
 	cout << this->ptr << endl;
 }
+
+
 
 //======================== RTNode implementation ==============================================
 

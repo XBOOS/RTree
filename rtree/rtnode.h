@@ -12,11 +12,13 @@ private:
 public:
 	Entry();
 	Entry(const BoundingBox& thatMBR, const int rid);
+	Entry& Entry::operator=(const Entry& other);
 	~Entry();
 	const BoundingBox& get_mbr() const;
 	RTNode* get_ptr() const;
 	int get_rid() const;
 
+	void set_rid(int rid);
 	void set_mbr(const BoundingBox& thatMBR);
 	void set_ptr(RTNode* ptr);
 
