@@ -8,11 +8,11 @@ private:
 	BoundingBox mbr;
 	RTNode* ptr;		//point to the node this entry represents, valid only if this is a non-leaf node entry.
 	int rid;			// valid only if this is a leaf node entry.
-	
 public:
 	Entry();
 	Entry(const BoundingBox& thatMBR, const int rid);
-	Entry& Entry::operator=(const Entry& other);
+	Entry(const BoundingBox& thatMBR, RTNode* ptr);
+	Entry& operator=(const Entry& other);
 	~Entry();
 	const BoundingBox& get_mbr() const;
 	RTNode* get_ptr() const;
@@ -37,4 +37,6 @@ class RTNode {
 		Entry* entries;
 		int level;
 		int size;
+		RTNode* parent;
+
 };

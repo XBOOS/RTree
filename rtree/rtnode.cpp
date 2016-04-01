@@ -12,7 +12,7 @@ Entry::Entry(const BoundingBox& thatMBR, const int rid):mbr(thatMBR) {
 	this->ptr = NULL;
 }
 
-Entry::Entry(const BoundingBox& thatMBR, const RTNode* ptr):mbr(thatMBR) {
+Entry::Entry(const BoundingBox& thatMBR, RTNode* ptr):mbr(thatMBR) {
 	this->rid = -1;
 	this->ptr = ptr;
 }
@@ -20,9 +20,9 @@ Entry::Entry(const BoundingBox& thatMBR, const RTNode* ptr):mbr(thatMBR) {
 Entry& Entry::operator=(const Entry& other)
 {
 	if (&other != this) {
-		this.mbr = other.mbr;
-		this.rid = other.rid;
-		this.ptr = other.ptr;
+		this->mbr = other.mbr;
+		this->rid = other.rid;
+		this->ptr = other.ptr;
 
 	}
 	return *this;
@@ -76,6 +76,7 @@ RTNode::RTNode(int lev, int s)
 	entries = new Entry[s];
 	level = lev;
 	size = s;
+	parent = NULL;
 }
 
 RTNode::RTNode(const RTNode& other)
@@ -90,9 +91,11 @@ RTNode& RTNode::operator=(const RTNode& other)
 		entry_num = other.entry_num;
 		level = other.level;
 		size = other.size;
+		parent = other.parent;
 		for (int i = 0; i < entry_num; i++)
 			entries[i] = other.entries[i];
 	}
+
 	return *this;
 }
 
@@ -106,5 +109,6 @@ RTNode::~RTNode()
 		}
 	}
 	delete []entries;
+	parent = NULL;
 	entries = NULL;
 }

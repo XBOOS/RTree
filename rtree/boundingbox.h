@@ -13,6 +13,7 @@ private:
 public:
 	BoundingBox();
 	BoundingBox(vector<int> thatLow, vector<int> thatHigh);
+	BoundingBox(int dim);
 	BoundingBox(const BoundingBox& thatBox);
 
 	const vector<int>& get_lowest() const;

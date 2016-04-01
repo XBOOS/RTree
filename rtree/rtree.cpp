@@ -30,7 +30,7 @@ RTree::~RTree()
 */
 int RTree::calc_area_enlargement(const BoundingBox& original,const BoundingBox& addition)
 {
-	BoundingBox tmp = new BoundingBox(original);
+	BoundingBox tmp = BoundingBox(original);
 	tmp.group_with(addition);
 	return tmp.get_area()-original.get_area();
 }
@@ -40,8 +40,8 @@ int RTree::calc_area_enlargement(const BoundingBox& original,const BoundingBox& 
 void RTree::swap_leaf_node_entry(Entry& entry1, Entry& entry2)
 {
 				//swap needs deep copy
-    			Entry tmp = new Entry(entry1.get_mbr(),entry1.get_rid());
-    			tmp.set_ptr(entry1.get_ptr())
+    			Entry tmp = Entry(entry1.get_mbr(),entry1.get_rid());
+    			tmp.set_ptr(entry1.get_ptr());
     			entry1.set_rid(entry2.get_rid());
     			entry1.set_mbr(entry2.get_mbr());
     			entry1.set_ptr(entry2.get_ptr());
@@ -111,7 +111,7 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	highMin_idxs.reserve(max_entry_num+1);
 	norm_width_diff.reserve(max_entry_num+1);
 	int lowMax_idx;
-	int highMax_idx;
+	int highMin_idx;
 
 	for(int i=0;i<newEntry.get_mbr().get_dim();++i)
 	{
@@ -232,16 +232,17 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 void RTree::split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 {
 
-	int idx1 = idx2 = 0;
+	int idx1 = 0;
+	int idx2 = 0;
 	linear_pick_seeds(l,newEntry,idx1,idx2);
-	ll.entries[0] = newEntry;
+	ll->entries[0] = newEntry;
 
 	int l_next_idx = 1;
 	int ll_next_idx = 1;
 	//assign the remaining entries in the order of sorted list
 
-	BoundingBox l_mbr = new BoundingBox(l->entries[0].get_mbr());
-	BoundingBox ll_mbr = new BoundingBox(newEntry.get_mbr());
+	BoundingBox l_mbr = BoundingBox(l->entries[0].get_mbr());
+	BoundingBox ll_mbr =  BoundingBox(newEntry.get_mbr());
 
 	int i;
 	for(i=1;i<max_entry_num;++i)
@@ -309,26 +310,26 @@ void RTree::split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 
 	}
 
-	l.entry_num = l_next_idx;
-	ll.entry_num = ll_next_idx;
+	l->entry_num = l_next_idx;
+	ll->entry_num = ll_next_idx;
 }
 
-void RTree::adjust_tree(RTree* l,RTree* ll)
+void RTree::adjust_tree(RTNode* l,RTNode* ll)
 {
 	//remember to grow the tree taller if neccessary
-	RTree* N = l;
-	RTree* NN = ll;
+	RTNode* N = l;
+	RTNode* NN = ll;
 	while(true)
 	{
 		if(N==root) break;//remember to grow the tree height
 		{
-        		root = new RTree(l.level+1,l.size);
-        		Entry l_entry = new Entry();
+        		root = new RTNode(l->level+1,l->size);
+        		Entry l_entry = Entry();
                 l_entry.set_mbr(get_mbr(l->entries,l->entry_num));
                 l_entry.set_ptr(l);
        			root->entries[root->entry_num++] = l_entry;
 
-       			Entry ll_entry = new Entry();
+       			Entry ll_entry = Entry();
        			ll_entry.set_mbr(get_mbr(ll->entries,ll->entry_num));
                 ll_entry.set_ptr(ll);
                 root->entries[root->entry_num++] = ll_entry;
@@ -338,7 +339,7 @@ void RTree::adjust_tree(RTree* l,RTree* ll)
 
 
 
-		RTree* p = l->parent;
+		RTNode* p = l->parent;
 		//find the entry En in parent RTNode pointing to l
 		for(int i=0;i< p->entry_num;++i)
 		{
@@ -351,7 +352,7 @@ void RTree::adjust_tree(RTree* l,RTree* ll)
 		//if split, propagate the node split upward
 		if(NN!=NULL)
 		{
-			Entry newEntry = new Entry();
+			Entry newEntry = Entry();
 			newEntry.set_mbr(get_mbr(ll->entries,ll->entry_num));
 			newEntry.set_ptr(ll);
 			if(p->entry_num<p->size) //still have free entry space,insert
@@ -361,7 +362,7 @@ void RTree::adjust_tree(RTree* l,RTree* ll)
 			}
 			else // split the node again
 			{
-				RTNode* pp = new RTNode(p.level,p.size);
+				RTNode* pp = new RTNode(p->level,p->size);
                 split_node(p,pp,newEntry);
                	NN = pp; //if a node split happens, include it into the
 			}
@@ -382,13 +383,13 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	/***
 	ADD YOUR CODE HERE
 	****/
-	BoundingBox bb = new BoundingBox(coordinate,coordinate);
-	Entry newEntry = new Entry(bb,rid);
+	BoundingBox bb = BoundingBox(coordinate,coordinate);
+	Entry newEntry = Entry(bb,rid);
 
 	RTNode* l = choose_leaf(newEntry);
-	if(l.entry_num == max_entry_num) // the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
+	if(l->entry_num == max_entry_num) // the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
 	{
-		RTNode* ll = new RTNode(l.level,l.size);
+		RTNode* ll = new RTNode(l->level,l->size);
 		split_node(l,ll,newEntry);
 		adjust_tree(l,ll);
 	}

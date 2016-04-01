@@ -4,8 +4,8 @@
 BoundingBox::BoundingBox() {
 }
 BoundingBox::BoundingBox(int dim){
-	this.lowest = vector<int>(dim,0);
-	this.highest = vector<int>(dim,0);
+	this->lowest = vector<int>(dim,0);
+	this->highest = vector<int>(dim,0);
 
 }
 BoundingBox::BoundingBox(vector<int> thatLow, vector<int> thatHigh) {

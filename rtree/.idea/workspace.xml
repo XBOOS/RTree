@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="161456b0-8e41-4361-ab9a-ee9898369085" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/a1" afterPath="$PROJECT_DIR$/a1" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boundingbox.cpp" afterPath="$PROJECT_DIR$/boundingbox.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boundingbox.h" afterPath="$PROJECT_DIR$/boundingbox.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtnode.cpp" afterPath="$PROJECT_DIR$/rtnode.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtnode.h" afterPath="$PROJECT_DIR$/rtnode.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtree.cpp" afterPath="$PROJECT_DIR$/rtree.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtree.h" afterPath="$PROJECT_DIR$/rtree.h" />
     </list>
@@ -42,8 +47,8 @@
       <file leaf-file-name="boundingbox.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/boundingbox.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.962963">
-              <caret line="69" column="21" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="21" />
+            <state vertical-scroll-proportion="-2.7777777">
+              <caret line="5" column="33" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -62,8 +67,8 @@
       <file leaf-file-name="rtnode.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rtnode.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.222222">
-              <caret line="22" column="16" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="16" />
+            <state vertical-scroll-proportion="-7.2222223">
+              <caret line="13" column="51" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -72,18 +77,18 @@
       <file leaf-file-name="rtree.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rtree.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.851852">
-              <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+            <state vertical-scroll-proportion="-5.5185184">
+              <caret line="29" column="68" selection-start-line="29" selection-start-column="68" selection-end-line="29" selection-end-column="68" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rtree.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="rtree.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rtree.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.2254642">
-              <caret line="195" column="60" selection-start-line="195" selection-start-column="49" selection-end-line="195" selection-end-column="60" />
+            <state vertical-scroll-proportion="-5.2777777">
+              <caret line="256" column="25" selection-start-line="256" selection-start-column="25" selection-end-line="256" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -92,18 +97,18 @@
       <file leaf-file-name="rtnode.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rtnode.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.3333333">
-              <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+            <state vertical-scroll-proportion="-3.8888888">
+              <caret line="14" column="66" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="66" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="boundingbox.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="boundingbox.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/boundingbox.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="21" column="50" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.5569307">
+              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -122,11 +127,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/rtnode.h" />
-        <option value="$PROJECT_DIR$/boundingbox.cpp" />
-        <option value="$PROJECT_DIR$/rtnode.cpp" />
         <option value="$PROJECT_DIR$/rtree.h" />
         <option value="$PROJECT_DIR$/rtree.cpp" />
+        <option value="$PROJECT_DIR$/rtnode.cpp" />
+        <option value="$PROJECT_DIR$/rtnode.h" />
+        <option value="$PROJECT_DIR$/boundingbox.cpp" />
+        <option value="$PROJECT_DIR$/boundingbox.h" />
       </list>
     </option>
   </component>
@@ -464,12 +470,12 @@
       <created>1459406553950</created>
       <option name="number" value="Default" />
       <updated>1459406553950</updated>
-      <workItem from="1459406556896" duration="30676000" />
+      <workItem from="1459406556896" duration="32352000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30676000" />
+    <option name="totallyTimeSpent" value="32352000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="46" y="23" width="1234" height="777" extended-state="6" />
@@ -536,50 +542,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/boundingbox.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="50" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rtnode.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.3333333">
-          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rtnode.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.222222">
-          <caret line="22" column="16" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/boundingbox.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.962963">
-          <caret line="69" column="21" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rtree.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.851852">
-          <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+        <state vertical-scroll-proportion="-5.5185184">
+          <caret line="29" column="68" selection-start-line="29" selection-start-column="68" selection-end-line="29" selection-end-column="68" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rtree.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.2254642">
-          <caret line="195" column="60" selection-start-line="195" selection-start-column="49" selection-end-line="195" selection-end-column="60" />
+        <state vertical-scroll-proportion="-5.2777777">
+          <caret line="256" column="25" selection-start-line="256" selection-start-column="25" selection-end-line="256" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rtnode.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8888888">
+          <caret line="14" column="66" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rtnode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.2222223">
+          <caret line="13" column="51" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boundingbox.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.7777777">
+          <caret line="5" column="33" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boundingbox.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5569307">
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
           <folding />
         </state>
       </provider>
