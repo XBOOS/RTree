@@ -12,6 +12,11 @@ Entry::Entry(const BoundingBox& thatMBR, const int rid):mbr(thatMBR) {
 	this->ptr = NULL;
 }
 
+Entry::Entry(const BoundingBox& thatMBR, const RTNode* ptr):mbr(thatMBR) {
+	this->rid = -1;
+	this->ptr = ptr;
+}
+
 Entry& Entry::operator=(const Entry& other)
 {
 	if (&other != this) {

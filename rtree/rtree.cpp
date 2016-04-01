@@ -319,8 +319,55 @@ void adjust_tree(RTree* l,RTree* ll)
 	RTree* NN = ll;
 	while(true)
 	{
-		if()
+		if(N==root) break;//remember to grow the tree height
+		{
+        		root = new RTree(l.level+1,l.size);
+        		Entry l_entry = new Entry();
+                l_entry.set_mbr(get_mbr(l->entries,l->entry_num));
+                l_entry.set_ptr(l);
+       			root->entries[root->entry_num++] = l_entry;
+
+       			Entry ll_entry = new Entry();
+       			ll_entry.set_mbr(get_mbr(ll->entries,ll->entry_num));
+                ll_entry.set_ptr(ll);
+                root->entries[root->entry_num++] = ll_entry;
+        		}
+
+
+
+
+
+		RTree* p = l->parent;
+		//find the entry En in parent RTNode pointing to l
+		for(int i=0;i< p->entry_num;++i)
+		{
+			if(p->entries[i].get_ptr()==l)
+			{
+				p->entries[i].set_mbr(get_mbr(l->entries,l->entry_num));
+				break;
+			}
+		}
+		//if split, propagate the node split upward
+		if(NN!=NULL)
+		{
+			Entry newEntry = new Entry();
+			newEntry.set_mbr(get_mbr(ll->entries,ll->entry_num));
+			newEntry.set_ptr(ll);
+			if(p->entry_num<p->size) //still have free entry space,insert
+			{
+				p->entries[p->entry_num++] = newEntry;
+				NN = NULL;
+			}
+			else // split the node again
+			{
+				RTNode* pp = new RTNode(p.level,p.size);
+                split_node(p,pp,newEntry);
+               	NN = pp; //if a node split happens, include it into the
+			}
+		}
+		N = p;//move up to next level
 	}
+
 }
 
 
@@ -346,7 +393,7 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	}
 	else //insert the newEntry into the leaf node
 	{
-		l->entries[++l->entry_num] = newEntry;
+		l->entries[l->entry_num++] = newEntry;
 		adjust_tree(l,NULL);
 	}
 
