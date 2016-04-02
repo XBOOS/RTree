@@ -178,7 +178,7 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 		{
 			for(int j=i+1;j<max_entry_num;++j)
 			{
-				if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+				if(!tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
 				{
 					swap_leaf_node_entry(l->entries[i],l->entries[j]);
 				}
@@ -205,12 +205,12 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 		{
 			swap_leaf_node_entry(l->entries[idx2],newEntry);
 		}
-
+				
 		for(int i=1;i<max_entry_num;++i)
             {
             	for(int j=i+1;j<max_entry_num;++j)
            		{
-           			if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+           			if(!tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
             		{
             			swap_leaf_node_entry(l->entries[i],l->entries[j]);
            			}
