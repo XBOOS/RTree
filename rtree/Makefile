@@ -1,5 +1,5 @@
 CXX:=g++
-CXXFLAGS:=-c
+CXXFLAGS:=-c -g
 INCLUDES:=
 LIBS:=
 EXE:=a1

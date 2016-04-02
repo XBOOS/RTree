@@ -107,21 +107,19 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	vector<int> lowMax_idxs;
 	vector<int> highMin_idxs;
 	vector<int> norm_width_diff;
-	lowMax_idxs.reserve(max_entry_num+1);
-	highMin_idxs.reserve(max_entry_num+1);
-	norm_width_diff.reserve(max_entry_num+1);
-	int lowMax_idx;
-	int highMin_idx;
+	lowMax_idxs.reserve(dimension);//newEntry.get_mbr().get_dim()
+	highMin_idxs.reserve(dimension);
+	norm_width_diff.reserve(dimension);
 
-	for(int i=0;i<newEntry.get_mbr().get_dim();++i)
+	for(int i=0;i<dimension;++i)
 	{
 		int lowMax = newEntry.get_mbr().get_lowestValue_at(i);
 		int highMin = newEntry.get_mbr().get_highestValue_at(i);
-		lowMax_idx = max_entry_num;//virtual index for newEntry
-		highMin_idx = max_entry_num;//for newEntry
+		int lowMax_idx = max_entry_num;//virtual index for newEntry
+		int highMin_idx = max_entry_num;//for newEntry
 		int lower_bound = lowMax;
 		int higher_bound = highMin;
-		for(int j=0;j<max_entry_num;++i)
+		for(int j=0;j<max_entry_num;++j)
 		{
 			int lowTmp = l->entries[j].get_mbr().get_lowestValue_at(i);
 			int highTmp = l->entries[j].get_mbr().get_highestValue_at(i);
@@ -146,12 +144,12 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 		highMin_idxs[i] = highMin_idx;
 		norm_width_diff[i] = (highMin-lowMax)/(higher_bound-lower_bound);
 
-	}
-	//after finding the information on each dimention.
+	}//looping over dimensions
+	//after finding the information on each dimension.
 
 	int extreme_pair_idx = 0;
 	int extreme_pair_value = norm_width_diff[0];
-	for(int i=1;i<max_entry_num;++i)
+	for(int i=1;i<dimension;++i)
 	{
 		if(norm_width_diff[i]>extreme_pair_value)
 		{
@@ -164,14 +162,15 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	//if the lowMax and highMin belong to the same entry
 	if(lowMax_idxs[extreme_pair_idx]==highMin_idxs[extreme_pair_idx])
 	{
+		int tmp_index = lowMax_idxs[extreme_pair_idx];
 		//insert the selected one if
 		//sort the remaining entries except for A. O(n^2) time complexity using tie_breaking.but this is just corner case
 		//so does not affect the amortized analysis
-		if(extreme_pair_idx!=max_entry_num)
+		if(tmp_index!=max_entry_num)
 		{
 			//if the special element is not the newEntry, just insert newEntry to the spefic position and sort the entries list
 			//otherwise leave the list its way
-			swap_leaf_node_entry(l->entries[extreme_pair_value],newEntry);
+			swap_leaf_node_entry(l->entries[tmp_index],newEntry);
 		}
 
 //		for(int i=0;i<max_entry_num;++1)
@@ -192,6 +191,9 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 	}
 	else //successfully selected out the two seeds
 	{
+		int lowMax_idx = lowMax_idxs[extreme_pair_idx];
+        int highMin_idx = highMin_idxs[extreme_pair_idx];
+
 		idx1 = lowMax_idx<highMin_idx?lowMax_idx:highMin_idx; //the smaller one of the two indexs
 		idx2 = lowMax_idx>highMin_idx?lowMax_idx:highMin_idx; //the larger one of the two indexs
 
@@ -321,41 +323,44 @@ void RTree::adjust_tree(RTNode* l,RTNode* ll)
 	RTNode* NN = ll;
 	while(true)
 	{
-		if(N==root) break;//remember to grow the tree height
+		if(N==root)
 		{
-        		root = new RTNode(l->level+1,l->size);
-        		Entry l_entry = Entry();
-                l_entry.set_mbr(get_mbr(l->entries,l->entry_num));
-                l_entry.set_ptr(l);
-       			root->entries[root->entry_num++] = l_entry;
+			if(NN!=NULL){//if the root splits, grow the tree height
+        		root = new RTNode(N->level+1,N->size);
+        		Entry N_entry = Entry();
+                N_entry.set_mbr(get_mbr(N->entries,N->entry_num));
+                N->parent = root;
+                N_entry.set_ptr(N);
+       			root->entries[root->entry_num++] = N_entry;
 
-       			Entry ll_entry = Entry();
-       			ll_entry.set_mbr(get_mbr(ll->entries,ll->entry_num));
-                ll_entry.set_ptr(ll);
-                root->entries[root->entry_num++] = ll_entry;
-        		}
+       			Entry NN_entry = Entry();
+       			NN_entry.set_mbr(get_mbr(NN->entries,NN->entry_num));
+       			NN->parent = root;
+                NN_entry.set_ptr(NN);
+                root->entries[root->entry_num++] = NN_entry;
+             }
+             //when arriving at root, end the tree adjustment.
+                break;
+        }
 
-
-
-
-
-		RTNode* p = l->parent;
-		//find the entry En in parent RTNode pointing to l
-		for(int i=0;i< p->entry_num;++i)
+		RTNode* p = N->parent;
+		//find the entry En in parent RTNode pointing to N
+		for(int i=0;i< p->entry_num;++i) //update the bounding box area
 		{
-			if(p->entries[i].get_ptr()==l)
+			if(p->entries[i].get_ptr()==N)
 			{
-				p->entries[i].set_mbr(get_mbr(l->entries,l->entry_num));
+				p->entries[i].set_mbr(get_mbr(N->entries,N->entry_num));
 				break;
 			}
 		}
+
 		//if split, propagate the node split upward
 		if(NN!=NULL)
 		{
 			Entry newEntry = Entry();
-			newEntry.set_mbr(get_mbr(ll->entries,ll->entry_num));
-			newEntry.set_ptr(ll);
-			if(p->entry_num<p->size) //still have free entry space,insert
+			newEntry.set_mbr(get_mbr(NN->entries,NN->entry_num));
+			newEntry.set_ptr(NN);
+			if(p->entry_num<max_entry_num) //still have free entry space,insert
 			{
 				p->entries[p->entry_num++] = newEntry;
 				NN = NULL;
@@ -363,6 +368,7 @@ void RTree::adjust_tree(RTNode* l,RTNode* ll)
 			else // split the node again
 			{
 				RTNode* pp = new RTNode(p->level,p->size);
+				pp->parent = p->parent;// every time construct a slit node dont forget to set its parent
                 split_node(p,pp,newEntry);
                	NN = pp; //if a node split happens, include it into the
 			}
@@ -378,6 +384,7 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	if (coordinate.size() != this->dimension)
 	{
 		cerr << "R-tree dimensionality inconsistency\n";
+		return false;
 	}
 
 	/***
@@ -387,9 +394,18 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	Entry newEntry = Entry(bb,rid);
 
 	RTNode* l = choose_leaf(newEntry);
-	if(l->entry_num == max_entry_num) // the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
+	//first check if there already is the point with same key.(it will definitedly be chosen becaruse the area
+	//enlargment is 0.
+	for(int i=0;i<l->entry_num;++i)
+	{
+		if(newEntry.get_mbr().is_equal(l->entries[i].get_mbr())) return false;
+	}
+
+	// the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
+	if(l->entry_num == max_entry_num)
 	{
 		RTNode* ll = new RTNode(l->level,l->size);
+		ll->parent = l->parent; //set to the same parent
 		split_node(l,ll,newEntry);
 		adjust_tree(l,ll);
 	}
@@ -400,7 +416,7 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	}
 
 
-
+	return true;
 }
 
 void RTree::query_range(const BoundingBox& mbr, int& result_count, int& node_travelled)
@@ -421,8 +437,9 @@ bool RTree::query_point(const vector<int>& coordinate, Entry& result)
 	if (coordinate.size() != this->dimension)
 	{
 		cerr << "R-tree dimensionality inconsistency\n";
-	}
 
+	}
+	return false;
 	/***
 	ADD YOUR CODE HERE
 	****/
