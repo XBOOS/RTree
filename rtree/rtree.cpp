@@ -127,13 +127,13 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 			lower_bound = lower_bound<lowTmp?lower_bound:lowTmp;
             higher_bound = higher_bound>highTmp?higher_bound:highTmp;
 
-			if((lowTmp>lowMax)|| (lowTmp==lowMax && !tie_breaking(l->entries[j].get_mbr(),l->entries[lowMax_idx].get_mbr())))
+			if((lowTmp>lowMax)|| (lowTmp==lowMax && !tie_breaking(l->entries[j].get_mbr(),newEntry.get_mbr())))
 			{
 				lowMax = lowTmp;
 				lowMax_idx = j;
 			}
 
-			if((highTmp<highMin)|| (highTmp==highMin && !tie_breaking(l->entries[j].get_mbr(),l->entries[highMin_idx].get_mbr())))
+			if((highTmp<highMin)|| (highTmp==highMin && tie_breaking(l->entries[j].get_mbr(),newEntry.get_mbr())))
             {
         		highMin = highTmp;
             	highMin_idx = j;
@@ -143,7 +143,6 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 		lowMax_idxs[i] = lowMax_idx;
 		highMin_idxs[i] = highMin_idx;
 		norm_width_diff[i] = (highMin-lowMax)/(higher_bound-lower_bound);
-		if (norm_width_diff[i]<0) norm_width_diff[i]*=(-1);
 
 	}//looping over dimensions
 	//after finding the information on each dimension.
@@ -174,16 +173,16 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 			swap_leaf_node_entry(l->entries[tmp_index],newEntry);
 		}
 
-		for(int i=0;i<max_entry_num;++i)
-		{
-			for(int j=i+1;j<max_entry_num;++j)
-			{
-				if(!tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
-				{
-					swap_leaf_node_entry(l->entries[i],l->entries[j]);
-				}
-			}
-		}
+//		for(int i=0;i<max_entry_num;++1)
+//		{
+//			for(int j=i+1;j<max_entry_num;++j)
+//			{
+//				if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+//				{
+//					swap_leaf_node_entry(l->entries[i].get_mbr(),l->entries[j].get_mbr());
+//				}
+//			}
+//		}
 		//one of them is copied to newEntry, one of them if changed to the first entry of l->entries
 //		idx1 = 0;
 //		idx2 = max_entry_num;
@@ -205,23 +204,22 @@ void RTree::linear_pick_seeds(RTNode* l,Entry& newEntry,int& idx1,int& idx2)
 		{
 			swap_leaf_node_entry(l->entries[idx2],newEntry);
 		}
-				
-		for(int i=1;i<max_entry_num;++i)
-            {
-            	for(int j=i+1;j<max_entry_num;++j)
-           		{
-           			if(!tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
-            		{
-            			swap_leaf_node_entry(l->entries[i],l->entries[j]);
-           			}
-            	}
-           	}
+
 //		idx1 = 0;
 //      idx2 = max_entry_num;
 
 	}
 
-
+	for(int i=0;i<max_entry_num;++i)
+    {
+    	for(int j=i+1;j<max_entry_num;++j)
+   		{
+   			if(tie_breaking(l->entries[i].get_mbr(),l->entries[j].get_mbr()))
+    		{
+    			swap_leaf_node_entry(l->entries[i],l->entries[j]);
+   			}
+    	}
+   	}
 
    	idx1 = 0;
     idx2 = max_entry_num;
@@ -270,19 +268,16 @@ void RTree::split_node(RTNode* l, RTNode* ll, Entry& newEntry)
 			ll_mbr.group_with(l->entries[i].get_mbr());
 
 		}
-		//the next constraints are smaller area
 		else if(l_mbr.get_area()<ll_mbr.get_area())
 		{
 			l->entries[l_next_idx++] = l->entries[i];
             l_mbr.group_with(l->entries[i].get_mbr());
-
 		}
 		else if(l_mbr.get_area()>ll_mbr.get_area())
 		{
 			ll->entries[ll_next_idx++] = l->entries[i];
         	ll_mbr.group_with(l->entries[i].get_mbr());
-
-		}
+		}12321
 		else if(l_next_idx<ll_next_idx)
 		{
 			l->entries[l_next_idx++] = l->entries[i];
@@ -497,20 +492,18 @@ bool RTree::query_point_helper(const RTNode* root_node,const vector<int>& coordi
         	}
         	else
         	{
-        		bool ok = false;
         		for(int i=0;i<root_node->entry_num;++i)
         		{
         			BoundingBox mbr = BoundingBox(coordinate,coordinate);
 
-
         			if(root_node->entries[i].get_mbr().is_intersected(mbr))
         			{
 
-        				ok = ok || query_point_helper(root_node->entries[i].get_ptr(),coordinate,result);
+        				return query_point_helper(root_node->entries[i].get_ptr(),coordinate,result);
         			}
         		}
 
-        		return ok;
+        		return false;
         	}
 
 

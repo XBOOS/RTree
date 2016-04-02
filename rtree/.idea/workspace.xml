@@ -4,7 +4,12 @@
     <list default="true" id="161456b0-8e41-4361-ab9a-ee9898369085" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/a1" afterPath="$PROJECT_DIR$/a1" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtree.cpp" afterPath="$PROJECT_DIR$/rtree.cpp" />
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_case_1/test1_out.txt" afterPath="$PROJECT_DIR$/test_case_1/test1_out.txt" />
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rtree.h" afterPath="$PROJECT_DIR$/rtree.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+>>>>>>> parent of 34377e0... new fix
     </list>
     <ignored path="rtree.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,7 +48,7 @@
       <file leaf-file-name="boundingbox.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/boundingbox.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="16.296297">
+            <state vertical-scroll-proportion="-5.3703704">
               <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
               <folding />
             </state>
@@ -53,7 +58,7 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="40.74074">
+            <state vertical-scroll-proportion="-6.5925927">
               <caret line="134" column="28" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="28" />
               <folding />
             </state>
@@ -83,12 +88,23 @@
       <file leaf-file-name="rtree.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rtree.cpp">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state vertical-scroll-proportion="2.3622048">
               <caret line="207" column="16" selection-start-line="207" selection-start-column="16" selection-end-line="207" selection-end-column="16" />
               <folding>
                 <element signature="e#0#17673#0" expanded="false" />
                 <element signature="e#0#17673#0" expanded="false" />
                 <element signature="e#0#17673#0" expanded="false" />
+=======
+            <state vertical-scroll-proportion="0.92913383">
+              <caret line="495" column="29" selection-start-line="495" selection-start-column="29" selection-end-line="495" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#17168#0" expanded="false" />
+                <element signature="e#0#17168#0" expanded="false" />
+                <element signature="e#0#17168#0" expanded="false" />
+                <element signature="e#0#17168#0" expanded="false" />
+                <element signature="e#0#17168#0" expanded="false" />
+>>>>>>> parent of 34377e0... new fix
               </folding>
             </state>
           </provider>
@@ -470,12 +486,20 @@
       <created>1459406553950</created>
       <option name="number" value="Default" />
       <updated>1459406553950</updated>
+<<<<<<< HEAD
       <workItem from="1459406556896" duration="52109000" />
+=======
+      <workItem from="1459406556896" duration="45616000" />
+>>>>>>> parent of 34377e0... new fix
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="52109000" />
+=======
+    <option name="totallyTimeSpent" value="45616000" />
+>>>>>>> parent of 34377e0... new fix
   </component>
   <component name="ToolWindowManager">
     <frame x="46" y="23" width="1234" height="777" extended-state="6" />
@@ -497,7 +521,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11493289" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -558,25 +582,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rtree.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.11111">
-          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="40.74074">
-          <caret line="134" column="28" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/boundingbox.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="16.296297">
+        <state vertical-scroll-proportion="-5.3703704">
           <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
           <folding />
         </state>
@@ -590,14 +598,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5925927">
+          <caret line="134" column="28" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rtree.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.11111">
+          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/rtree.cpp">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="2.3622048">
           <caret line="207" column="16" selection-start-line="207" selection-start-column="16" selection-end-line="207" selection-end-column="16" />
           <folding>
             <element signature="e#0#17673#0" expanded="false" />
             <element signature="e#0#17673#0" expanded="false" />
             <element signature="e#0#17673#0" expanded="false" />
+=======
+        <state vertical-scroll-proportion="0.92913383">
+          <caret line="495" column="29" selection-start-line="495" selection-start-column="29" selection-end-line="495" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#17168#0" expanded="false" />
+            <element signature="e#0#17168#0" expanded="false" />
+            <element signature="e#0#17168#0" expanded="false" />
+            <element signature="e#0#17168#0" expanded="false" />
+            <element signature="e#0#17168#0" expanded="false" />
+>>>>>>> parent of 34377e0... new fix
           </folding>
         </state>
       </provider>
