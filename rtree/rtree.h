@@ -24,7 +24,10 @@ class RTree {
 		//PLEASE implement below three functions
 		bool insert(const vector<int>& coordinate, int rid);
 		void query_range(const BoundingBox& mbr, int& result_count, int& node_travelled);
+		/*helper methods added by myself*/
+		void query_range_helper(const RTNode* root_node,const BoundingBox& mbr, int& result_count, int& node_travelled);
 		bool query_point(const vector<int>& coordinate, Entry& result);
+		bool query_point_helper(const RTNode* root_node,const vector<int>& coordinate, Entry& result);
 
 		//utility methods
 		int calc_area_enlargement(const BoundingBox& original,const BoundingBox& addition);

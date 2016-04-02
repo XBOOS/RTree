@@ -394,12 +394,17 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	Entry newEntry = Entry(bb,rid);
 
 	RTNode* l = choose_leaf(newEntry);
-	//first check if there already is the point with same key.(it will definitedly be chosen becaruse the area
-	//enlargment is 0.
-	for(int i=0;i<l->entry_num;++i)
-	{
-		if(newEntry.get_mbr().is_equal(l->entries[i].get_mbr())) return false;
-	}
+	//first check if there already is the point with same key.
+
+//incorrect method1, it is not sure that it will  be chosen because the tie_breaking will involve some random chance
+//	for(int i=0;i<l->entry_num;++i)
+//	{
+//		if(newEntry.get_mbr().is_equal(l->entries[i].get_mbr())) return false;
+//	}
+//instead use the query point
+	Entry result = Entry();
+	if(query_point(coordinate,result)) return false;
+
 
 	// the leafNode to insert is full,need to do the split,or could use l.entry_num==l.size
 	if(l->entry_num == max_entry_num)
@@ -419,6 +424,31 @@ bool RTree::insert(const vector<int>& coordinate, int rid)
 	return true;
 }
 
+void RTree::query_range_helper(const RTNode* root_node,const BoundingBox& mbr, int& result_count, int& node_travelled)
+{
+	++node_travelled;//for traversing root
+	if(root_node->level==0)//if T is a leaf node,traverse all the entries to check overlapping
+	{
+		for(int i=0;i<root_node->entry_num;++i)
+		{
+			if(root_node->entries[i].get_mbr().is_intersected(mbr))  ++result_count;
+
+		}
+	}
+	else
+	{
+		for(int i=0;i<root_node->entry_num;++i)
+		{
+			if(root_node->entries[i].get_mbr().is_intersected(mbr))
+			{
+
+				query_range_helper(root_node->entries[i].get_ptr(),mbr,result_count,node_travelled);
+			}
+		}
+	}
+
+}
+
 void RTree::query_range(const BoundingBox& mbr, int& result_count, int& node_travelled)
 {
 	if (mbr.get_dim() != this->dimension)
@@ -429,20 +459,59 @@ void RTree::query_range(const BoundingBox& mbr, int& result_count, int& node_tra
 	/***
 	ADD YOUR CODE HERE
 	****/
+	query_range_helper(root,mbr,result_count,node_travelled);
+
 }
 
+bool RTree::query_point_helper(const RTNode* root_node,const vector<int>& coordinate, Entry& result)
+{
+			if(root_node->level==0)//if T is a leaf node,traverse all the entries to check overlapping
+        	{
+        		for(int i=0;i<root_node->entry_num;++i)
+        		{
+        			BoundingBox mbr = BoundingBox(coordinate,coordinate);
+        			if(root_node->entries[i].get_mbr().is_equal(mbr))
+        			{
+        				result = root_node->entries[i];
+        				return true;
+        			}
+
+        		}
+
+        		return false;
+        	}
+        	else
+        	{
+        		for(int i=0;i<root_node->entry_num;++i)
+        		{
+        			BoundingBox mbr = BoundingBox(coordinate,coordinate);
+
+        			if(root_node->entries[i].get_mbr().is_intersected(mbr))
+        			{
+
+        				return query_point_helper(root_node->entries[i].get_ptr(),coordinate,result);
+        			}
+        		}
+
+        		return false;
+        	}
+
+
+}
 
 bool RTree::query_point(const vector<int>& coordinate, Entry& result)
 {
 	if (coordinate.size() != this->dimension)
 	{
 		cerr << "R-tree dimensionality inconsistency\n";
+		return false;
 
 	}
-	return false;
 	/***
 	ADD YOUR CODE HERE
 	****/
+	//have to do the traversal. due to tie_breaking. if i just use choose_leaf. there may be the chance of mistake
+	return query_point_helper(root,coordinate,result);
 }
 
 
