@@ -544,7 +544,7 @@ void RTree::condense_tree(RTNode** stack, int* entry_idx, int size)
 			insert(deleted_node->entries[i],deleted_node->level);
 		}
 	}
-
+	if (root->entry_num==1) root = root->entries[0].get_ptr();
 	delete []deleted_stack;
 
 }
@@ -570,11 +570,30 @@ bool RTree::del(const vector<int>& coordinate)
     //find the leaf node containing the target entry and remove the entry from the node.if NULL, the entry doesnt exist
    	RTNode* leaf = find_leaf(root,stack, entry_idx, stack_size, e);
 	if(leaf==NULL){//the entry does not exist
+		delete []stack;
+        delete []entry_idx;
 		return false;
 	}
+//	else if(leaf->level==level){//it is the root
+//	//update the mbr first and then do the re-insertion of all its entries
+//		leaf->set_mbr(get_mbr(leaf->entries,leaf->entry_num));
+//    	// (bubble) sort the entries in the remaining set
+//       	for (int j = 0; j < leaf->entry_num-1; j++) {
+//           	if (tie_breaking(leaf->entries[j].get_mbr(), leaf->entries[j+1].get_mbr())) {
+//           			swap_entry(leaf->entries, j, j+1);
+//           	}
+//       	}
+//
+//    		//re-insertion according to the order
+//    		for(int i=0;i<leaf->entry_num;++i){
+//    			insert(leaf->entries[i],leaf->level);
+//    		}
+//    	}
+//	}else{
+		condense_tree(stack,entry_idx,stack_size);
 
 
-	condense_tree(stack,entry_idx,stack_size);
+
 
 	delete []stack;
     delete []entry_idx;
