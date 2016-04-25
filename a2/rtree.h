@@ -25,7 +25,7 @@ class RTree {
 		bool insert(const Entry& e, int dest_level);
 		void stat(RTNode* node, int& record_cnt, int& node_cnt);
 		void print_node(RTNode* node, int indent_level);
-		void RTree::condense_tree(RTNode** stack, int* entry_idx, int size);
+		void condense_tree(RTNode** stack, int* entry_idx, int size);
 
 	public:
 		void stat();

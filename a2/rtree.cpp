@@ -536,6 +536,8 @@ void RTree::condense_tree(RTNode** stack, int* entry_idx, int size)
 		}
 	}
 
+	delete []deleted_stack;
+
 }
 
 
@@ -560,10 +562,14 @@ bool RTree::del(const vector<int>& coordinate)
    	RTNode* leaf = find_leaf(root,stack, entry_idx, stack_size, e);
 	if(leaf==NULL){//the entry does not exist
 		return false;
-	}else{
-		condense_tree(stack,entry_idx,stack_size);
-		return true;
 	}
+
+
+	condense_tree(stack,entry_idx,stack_size);
+
+	delete []stack;
+    delete []entry_idx;
+    return true;
 }
 
 
