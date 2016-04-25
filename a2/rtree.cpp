@@ -531,6 +531,15 @@ void RTree::condense_tree(RTNode** stack, int* entry_idx, int size)
 	while(deleted_size>0){
 		deleted_size--;
 		RTNode* deleted_node = deleted_stack[deleted_size];
+
+		// (bubble) sort the entries in the remaining set
+    	for (int j = 0; j < deleted_node->entry_num-1; j++) {
+        	if (tie_breaking(deleted_node->entries[j].get_mbr(), deleted_node->entries[j+1].get_mbr())) {
+        			swap_entry(deleted_node->entries, j, j+1);
+       		}
+     	}
+
+		//re-insertion according to the order
 		for(int i=0;i<deleted_node->entry_num;++i){
 			insert(deleted_node->entries[i],deleted_node->level);
 		}
